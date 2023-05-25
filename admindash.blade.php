@@ -57,7 +57,7 @@
 
         <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
           <div class="app-brand demo">
-            <a href="#" class="app-brand-link">
+            <a href="{{ route('admin/dashboard') }}" class="app-brand-link">
               <span class="fs-5">UNITEN FYP Registration System</span>
             </a>
           </div>
@@ -67,7 +67,7 @@
           <ul class="menu-inner py-1">
             <!-- Dashboard -->
             <li class="menu-item">
-              <a href="#" class="menu-link">
+              <a href="{{ route('admin/dashboard') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-home-circle"></i>
                 <div>Dashboard</div>
               </a>
@@ -85,12 +85,12 @@
 
                 <ul class="menu-sub">
                     <li class="menu-item">
-                    <a href="#" class="menu-link">
+                    <a href="{{ route('admin/project/viewall') }}" class="menu-link">
                         <div>View Projects</div>
                     </a>
                     </li>
                     <li class="menu-item">
-                    <a href="#" class="menu-link">
+                    <a href="{{ route('admin/project/create') }}" class="menu-link">
                         <div>Add New Project</div>
                     </a>
                     </li>
@@ -105,12 +105,12 @@
 
               <ul class="menu-sub">
                 <li class="menu-item">
-                  <a href="#" class="menu-link">
+                  <a href="{{ route('admin/lecturer/viewall') }}" class="menu-link">
                     <div>View Lecturers</div>
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="#" class="menu-link">
+                  <a href="{{ route('register') }}" class="menu-link">
                     <div>Register Lecturer Account</div>
                   </a>
                 </li>
@@ -125,12 +125,12 @@
 
                 <ul class="menu-sub">
                     <li class="menu-item">
-                    <a href="#" class="menu-link">
+                    <a href="{{ route('admin/student/viewall') }}" class="menu-link">
                         <div>View Students</div>
                     </a>
                     </li>
                     <li class="menu-item">
-                    <a href="#" class="menu-link">
+                    <a href="{{ route('admin/student/create') }}" class="menu-link">
                         <div>Add New Student</div>
                     </a>
                     </li>
@@ -151,11 +151,21 @@
                     <div class="navbar-nav me-auto">
                         <p class="pt-3 fw-bold">Welcome, admin</p>
                     </div>
+
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <div class="nav-item">
+                            <a class="nav-link fw-bold" href="{{ route('logout') }}" onclick="event.preventDefault(); this.closest('form').submit();" role="button">
+                                {{ __('Log Out') }}
+                            </a>
+                        </div>
+                    </form>
                 </div>
             </nav>
             <!-- / Navbar -->
 
             <!-- Content -->
+            @yield('content')
 
             <!-- Footer -->
             <footer class="content-footer footer bg-footer-theme">
