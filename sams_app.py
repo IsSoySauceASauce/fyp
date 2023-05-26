@@ -2,9 +2,10 @@ from flask import Flask
 from flask import render_template
 from flask import url_for
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sams.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sams_db.db'
 db = SQLAlchemy(app)
 
 class PageSentiment(db.Model):
@@ -16,6 +17,7 @@ class PageSentiment(db.Model):
     positive_word_freqs = db.Column(db.String(length=128), nullable=False)
     negative_words = db.Column(db.String(length=512), nullable=False)
     negative_word_freqs = db.Column(db.String(length=128), nullable=False)
+    date_created = db.Column(db.DateTime(), default=datetime.now)
 
 @app.route('/app')
 def home_page():
