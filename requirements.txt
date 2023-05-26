@@ -1,6 +1,8 @@
 youtokentome
 torch==2.0.0
 tensorflow==2.12.0
+tensorflow-probability
+torchlibrosa
 malaya==4.9.2
 numpy
 pandas

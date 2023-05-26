@@ -3,30 +3,30 @@
 {% block content %}
 
 <div class="container-xxl flex-grow-1 container-p-y">
-    <h4 class="fw-bold py-3 mb-4 fs-3"><span class="bx bx-search">&nbsp;</span>Analyze Instagram Page</h4>
+    <h4 class="fw-bold py-3 fs-3"><span class="bx bx-cube-alt">&nbsp;</span>Predict Post Sentiment</h4>
+    <h5 class="mb-4 fs-4">Predict a Mixed Language Social Media Post's Sentiment</h5>
 
     <div class="row">
       <div class="col-xl">
         <div class="card mb-4">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="mt-2 mb-0">Enter Instagram Page Name</h5>
+                <h5 class="mt-2 mb-0">Enter Social Media Post to Predict</h5>
             </div>
             <div class="card-body">
-                <form id="pageSearchForm" method="POST" action="">
+                <form id="postPredictForm" method="POST" action="">
                 
                 <div class="row mb-3">
                     <div class="mt-2 col-md-6">
-                        <input 
-                            type="text"
-                            class="form-control"
-                            id="page_name"
-                            name="page_name"
-                            required="required"
-                            placeholder='Instagram page name e.g. "goodvibesfest"'
-                        />
+                        <textarea 
+                            class="form-control" 
+                            id="post_text" 
+                            name="post_text"
+                            placeholder='Any mixed-language sentence(s) &#10;e.g. "concert semalam was actually my first concert. memang one of the best moments in my life"'
+                            rows="3"
+                        ></textarea>
                     </div>
                     <div class="mt-2 col-md-1">
-                        <button type="button" class="btn btn-primary me-2" id="analyzeBtn">Analyze</button>
+                        <button type="button" class="btn btn-primary me-2" id="predictBtn">Predict</button>
                         <div class="spinner-border text-primary align-items-start" role="status" id="loadingIcon" style="display:none">
                             <span class="visually-hidden"></span>
                         </div>
@@ -42,11 +42,18 @@
                     </div>
                 </div>
 
-                <div class="row mt-1" id="errorAlert" style="display:none">
+                <div class="row mt-1" id="positiveMsg" style="display:none">
                     <div class="col-6">
-                        <div class="alert alert-warning alert-dismissible" role="alert">
-                            <span id="errorMessage"></span>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        <div class="alert alert-success" role="alert">
+                            Positive
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-1" id="negativeMsg" style="display:none">
+                    <div class="col-6">
+                        <div class="alert alert-danger" role="alert">
+                            Negative
                         </div>
                     </div>
                 </div>
@@ -66,35 +73,39 @@
 
     $(document).ready(function(){
 
-        $('#analyzeBtn').click(function(){
+        $('#predictBtn').click(function(){
             $.ajax({
-                url: "{{ url_for('check_page_name') }}",
+                url: "{{ url_for('sams_predict') }}",
                 type: "POST",
                 data: {
-                    page_name: $('#page_name').val()
+                    post_text: $('#post_text').val()
                 },
                 beforeSend: function() {
-                    $('#analyzeBtn').hide();
+                    $('#predictBtn').hide();
                     $('#loadingIcon').show();
-                    $('#errorAlert').hide();
                     $('#unexpErrorAlert').hide();
                 },
                 complete: function() {
                     $('#loadingIcon').hide();
-                    $('#analyzeBtn').show();
+                    $('#predictBtn').show();
                 },
                 error: function() {
-                    $('#errorAlert').hide();
+                    $('#positiveMsg').hide();
+                    $('#negativeMsg').hide();
                     $('#unexpErrorAlert').show();
                 },
                 success: function(response) {
-                    if (response.error) {
+                    if (response.sentiment) {
                         $('#unexpErrorAlert').hide();
-                        $('#errorMessage').text(response.error);
-                        $('#errorAlert').show();
-                    }
-                    else {
-                        console.log('page is valid')
+
+                        if (response.sentiment.toString() == "positive"){
+                            $('#negativeMsg').hide();
+                            $('#positiveMsg').show();
+                        }
+                        else if (response.sentiment.toString() == "negative"){
+                            $('#positiveMsg').hide();
+                            $('#negativeMsg').show();
+                        }
                     }
                 }
             })
