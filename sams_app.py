@@ -17,7 +17,7 @@ class PageSentiment(db.Model):
     positive_word_freqs = db.Column(db.String(length=128), nullable=False)
     negative_words = db.Column(db.String(length=512), nullable=False)
     negative_word_freqs = db.Column(db.String(length=128), nullable=False)
-    date_created = db.Column(db.DateTime(), default=datetime.now)
+    date_created = db.Column(db.DateTime(), nullable=False, default=datetime.now())
 
 @app.route('/app')
 def home_page():
