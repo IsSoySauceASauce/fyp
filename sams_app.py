@@ -20,3 +20,7 @@ class PageSentiment(db.Model):
 @app.route('/app')
 def home_page():
     return render_template('home.html')
+
+@app.route('/app/analyze')
+def analyze():
+    return render_template('analyze.html')
