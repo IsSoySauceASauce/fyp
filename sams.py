@@ -4,11 +4,12 @@ import string
 import pickle
 from datetime import datetime, timedelta
 import numpy as np
-import nltk
-from nltk.sentiment import SentimentIntensityAnalyzer
 import malaya
 import re
 from statistics import mean
+import instaloader
+import nltk
+from nltk.sentiment import SentimentIntensityAnalyzer
 
 mly = malaya.sentiment.multinomial()
 sia = SentimentIntensityAnalyzer()
@@ -85,3 +86,38 @@ def predict(model_path, text):
     sentiment = classifier.classify(get_features(text))
 
     return sentiment
+
+bot = instaloader.Instaloader(max_connection_attempts=3)
+
+if not bot.context.is_logged_in:
+    username = "refict689"
+    password = "fict_insta689"
+    try:
+        bot.login(username, password)
+    except:
+        pass
+
+pagename = "pagename"
+try:
+    profile = instaloader.Profile.from_username(bot.context, pagename)
+    profile_username = profile.username
+    flag = False
+except:
+    pass
+
+posts = profile.get_posts()
+
+TODAY = datetime.now()
+UNTIL = datetime.now() - timedelta(days = 30)
+
+all_comments = []
+for post in posts:
+    postdate = post.date
+    if postdate > UNTIL and postdate <= TODAY:
+            comments = post.get_comments()
+            for comment in comments:
+                all_comments.append(comment.text)
+                if len(all_comments) >= 300:
+                    break
+    else:
+        break

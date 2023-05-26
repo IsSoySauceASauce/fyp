@@ -26,3 +26,11 @@ def home_page():
 @app.route('/app/analyze')
 def analyze():
     return render_template('analyze.html')
+
+@app.route('/app/scrape_classify', methods=['POST'])
+def scrape_classify():
+    pass
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html')
