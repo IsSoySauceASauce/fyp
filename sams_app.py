@@ -167,7 +167,10 @@ def check_page_name():
         bot = instaloader.Instaloader(max_connection_attempts=1)
 
         if not bot.context.is_logged_in:
-            bot.load_session_from_file('hazimridza')
+            try:
+                bot.load_session_from_file('hazimridza')
+            except:
+                return jsonify({'error': 'There was a problem connecting to Instagram.'})
         
         if bot.test_login() is None:
             return jsonify({'error': 'There was a problem connecting to Instagram.'}) 
@@ -191,8 +194,11 @@ def scrape_classify():
         bot = instaloader.Instaloader(max_connection_attempts=1)
 
         if not bot.context.is_logged_in:
-            bot.load_session_from_file('hazimridza')
-        
+            try:
+                bot.load_session_from_file('hazimridza')
+            except:
+                return jsonify({'error': 'There was a problem connecting to Instagram.'})
+
         if bot.test_login() is None:
             return jsonify({'error': 'There was a problem connecting to Instagram.'})
             

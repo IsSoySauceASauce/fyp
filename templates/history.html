@@ -12,10 +12,10 @@
                 <thead>
                 <tr>
                     <th>Page Name</th>
+                    <th class="text-nowrap">Date Created</th>
                     <th>Overall Sentiment</th>
                     <th>Top Positive Words</th>
                     <th>Top Negative Words</th>
-                    <th>Date Created</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
@@ -26,10 +26,10 @@
                 
                 <tr>
                     <td>{{ page_sentiment_visualisation.page_name }}</td>
+                    <td class="text-nowrap">{{ page_sentiment_visualisation.date_created.strftime('%d-%m-%Y') }}</td>
                     <td><img src='data:image/png;base64,{{ page_sentiment_visualisation.sentiment_graph }}'/></td>
                     <td><img src='data:image/png;base64,{{ page_sentiment_visualisation.positive_words_graph }}'/></td>
                     <td><img src='data:image/png;base64,{{ page_sentiment_visualisation.negative_words_graph }}'/></td>
-                    <td>{{ page_sentiment_visualisation.date_created.strftime('%d-%m-%Y') }}</td>
                     <td>
                         <div class="dropdown">
                             <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
