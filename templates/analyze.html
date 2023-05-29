@@ -33,6 +33,15 @@
                     </div>
                 </div>
 
+                <div class="row mt-1" id="connectingAlert" style="display:none">
+                    <div class="col-6">
+                        <div class="alert alert-info alert-dismissible" role="alert">
+                            Connecting to Instagram...
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="row mt-1" id="unexpErrorAlert" style="display:none">
                     <div class="col-6">
                         <div class="alert alert-danger alert-dismissible" role="alert">
@@ -47,6 +56,22 @@
                         <div class="alert alert-warning alert-dismissible" role="alert">
                             <span id="errorMessage"></span>
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-1" id="successAlert" style="display:none">
+                    <div class="col-6">
+                        <div class="alert alert-success" role="alert">
+                            Page found! Scraping for comments...
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-1" id="commentsScrapedAlert" style="display:none">
+                    <div class="col-6">
+                        <div class="alert alert-success" role="alert">
+                            Comments scraped! Analyzing comments and building summary of page sentiment...
                         </div>
                     </div>
                 </div>
@@ -79,22 +104,122 @@
                     $('#errorAlert').hide();
                     $('#unexpErrorAlert').hide();
                 },
-                complete: function() {
-                    $('#loadingIcon').hide();
-                    $('#analyzeBtn').show();
-                },
                 error: function() {
                     $('#errorAlert').hide();
                     $('#unexpErrorAlert').show();
+                    $('#loadingIcon').hide();
+                    $('#analyzeBtn').show();
                 },
                 success: function(response) {
                     if (response.error) {
                         $('#unexpErrorAlert').hide();
                         $('#errorMessage').text(response.error);
                         $('#errorAlert').show();
+                        $('#loadingIcon').hide();
+                        $('#analyzeBtn').show();
                     }
                     else {
-                        console.log('page is valid')
+                        $('#errorAlert').hide();
+                        $('#unexpErrorAlert').hide();
+                        $('#successAlert').show();
+                        $('#analyzeBtn').hide();
+                        $('#loadingIcon').show();
+
+                        $.ajax({
+                            url: "{{ url_for('scrape_classify') }}",
+                            type: "POST",
+                            data: {
+                                empty: true
+                            },
+                            beforeSend: function() {
+                                $('#analyzeBtn').hide();
+                                $('#loadingIcon').show();
+                                $('#errorAlert').hide();
+                                $('#unexpErrorAlert').hide();
+                            },
+                            error: function() {
+                                $('#successAlert').hide();
+                                $('#unexpErrorAlert').hide();
+                                $('#errorAlert').hide();
+                                $('#commentsScrapedAlert').show();
+                                $('#analyzeBtn').hide();
+                                $('#loadingIcon').show();
+
+                                $.ajax({
+                                    url: "{{ url_for('classify_store') }}",
+                                    type: "POST",
+                                    data: {
+                                        empty: true
+                                    },
+                                    beforeSend: function() {
+                                        $('#analyzeBtn').hide();
+                                        $('#loadingIcon').show();
+                                        $('#successAlert').hide();
+                                        $('#errorAlert').hide();
+                                        $('#unexpErrorAlert').hide();
+                                    },
+                                    complete: function() {
+                                        $('#loadingIcon').hide();
+                                        $('#analyzeBtn').show();
+                                    },
+                                    error: function() {
+                                        $('#commentsScrapedAlert').hide();
+                                        $('#successAlert').hide();
+                                        $('#errorAlert').hide();
+                                        $('#unexpErrorAlert').show();
+                                    },
+                                    success: function() {
+                                        window.location.href = "{{ url_for('history') }}"
+                                    }
+                                })
+                            },
+                            success: function() {
+                                if (response.error) {
+                                    $('#successAlert').hide();
+                                    $('#unexpErrorAlert').hide();
+                                    $('#errorMessage').text(response.error);
+                                    $('#errorAlert').show();
+                                    $('#loadingIcon').hide();
+                                    $('#analyzeBtn').show();
+                                }
+                                else {
+                                    $('#successAlert').hide();
+                                    $('#unexpErrorAlert').hide();
+                                    $('#errorAlert').hide();
+                                    $('#commentsScrapedAlert').show();
+                                    $('#analyzeBtn').hide();
+                                    $('#loadingIcon').show();
+
+                                    $.ajax({
+                                        url: "{{ url_for('classify_store') }}",
+                                        type: "POST",
+                                        data: {
+                                            empty: true
+                                        },
+                                        beforeSend: function() {
+                                            $('#analyzeBtn').hide();
+                                            $('#loadingIcon').show();
+                                            $('#successAlert').hide();
+                                            $('#errorAlert').hide();
+                                            $('#unexpErrorAlert').hide();
+                                        },
+                                        complete: function() {
+                                            $('#loadingIcon').hide();
+                                            $('#analyzeBtn').show();
+                                        },
+                                        error: function() {
+                                            $('#commentsScrapedAlert').hide();
+                                            $('#successAlert').hide();
+                                            $('#errorAlert').hide();
+                                            $('#unexpErrorAlert').show();
+                                        },
+                                        success: function() {
+                                            window.location.href = "{{ url_for('history') }}"
+                                        }
+                                    })
+                                }
+                            }
+                        })
                     }
                 }
             })

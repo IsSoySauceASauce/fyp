@@ -80,7 +80,7 @@ def get_features(tweet):
 
     return features
 
-def predict(model_path, text):
+def predict(text, model_path='models/MLPClassifier.pickle'):
     classifier = pickle.load(open(model_path, 'rb'))
     sentiment = classifier.classify(get_features(text))
 

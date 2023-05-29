@@ -1,0 +1,90 @@
+{% extends 'main_layout.html' %}
+
+{% block content %}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="fw-bold py-3 mb-4 fs-3"><span class="bx bx-table">&nbsp;</span>View History</h4>
+    <div class="card">
+        <h5 class="card-header">Page Sentiments History</h5>
+        <div class="table-responsive">
+            {% if page_sentiment_visualisations|length > 0 %}
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Page Name</th>
+                    <th>Overall Sentiment</th>
+                    <th>Top Positive Words</th>
+                    <th>Top Negative Words</th>
+                    <th>Date Created</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody class="table-border-bottom-0">
+                
+                {% set count = 1 %}
+                {% for page_sentiment_visualisation in page_sentiment_visualisations %}
+                
+                <tr>
+                    <td>{{ page_sentiment_visualisation.page_name }}</td>
+                    <td><img src='data:image/png;base64,{{ page_sentiment_visualisation.sentiment_graph }}'/></td>
+                    <td><img src='data:image/png;base64,{{ page_sentiment_visualisation.positive_words_graph }}'/></td>
+                    <td><img src='data:image/png;base64,{{ page_sentiment_visualisation.negative_words_graph }}'/></td>
+                    <td>{{ page_sentiment_visualisation.date_created.strftime('%d-%m-%Y') }}</td>
+                    <td>
+                        <div class="dropdown">
+                            <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                <i class="bx bx-dots-vertical-rounded"></i>
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="#">
+                                    <i class="bx bx-edit-alt me-1"></i>Edit
+                                </a>
+                                <a class="dropdown-item text-danger" href="#" data-bs-toggle="modal" data-bs-target="#basicModal{{ count }}">
+                                    <i class="bx bx-trash me-1"></i>Delete
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+
+                <!-- Delete Confirmation Modal -->
+                <div class="mt-3">
+                    <div class="modal fade" id="basicModal{{ count }}" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel1">Are you sure you would like to delete this record?</h5>
+                        </div>
+                        <div class="modal-body">
+                            <p>This action cannot be undone.</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                Cancel
+                            </button>
+                            <a href="#">
+                                <button type="button" class="btn btn-danger">Delete</button>
+                            </a>
+                        </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                <!-- / Delete Confirmation Modal -->
+
+                {% set count = count + 1 %}
+                {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+                <h6 class="card-body">There are no records to show.</h6>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block script %}
+
+{% endblock %}
