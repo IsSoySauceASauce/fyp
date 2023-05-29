@@ -254,8 +254,10 @@ def scrape_classify():
         except Exception as e:
             print(e)
             return jsonify({'error': 'An HTTP 429 error was encountered. Please wait a few hours before continuing again.'})
+        
+        return jsonify({'success': True})
 
-    return jsonify({'success': True})
+    return ('', 204)
 
 @app.route('/app/classify_store', methods=['POST'])
 def classify_store():
@@ -351,10 +353,13 @@ def classify_store():
             print('Adding data to database.')
             db.session.add(new_page_sentiment)
             db.session.commit()
-            return jsonify({'success': True})
         except Exception as e:
             print(e)
             return jsonify({'error': 'Error while storing sentiment analysis results to database.'})
+        
+        return jsonify({'success': True})
+    
+    return ('', 204)
 
 @app.route('/app/sams_predict', methods=['POST'])
 def sams_predict():
