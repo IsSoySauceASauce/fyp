@@ -33,11 +33,10 @@
                     </div>
                 </div>
 
-                <div class="row mt-1" id="connectingAlert" style="display:none">
+                <div class="row mt-1" id="connectionAlert" style="display:none">
                     <div class="col-6">
-                        <div class="alert alert-info alert-dismissible" role="alert">
+                        <div class="alert alert-info" role="alert">
                             Connecting to Instagram...
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     </div>
                 </div>
@@ -71,7 +70,7 @@
                 <div class="row mt-1" id="commentsScrapedAlert" style="display:none">
                     <div class="col-6">
                         <div class="alert alert-success" role="alert">
-                            Comments scraped! Analyzing comments and building summary of page sentiment...
+                            Comments scraped! Analyzing comments and adding page sentiment to database...
                         </div>
                     </div>
                 </div>
@@ -103,8 +102,10 @@
                     $('#loadingIcon').show();
                     $('#errorAlert').hide();
                     $('#unexpErrorAlert').hide();
+                    $('#connectionAlert').show();
                 },
                 error: function() {
+                    $('#connectionAlert').hide();
                     $('#errorAlert').hide();
                     $('#unexpErrorAlert').show();
                     $('#loadingIcon').hide();
@@ -112,6 +113,7 @@
                 },
                 success: function(response) {
                     if (response.error) {
+                        $('#connectionAlert').hide();
                         $('#unexpErrorAlert').hide();
                         $('#errorMessage').text(response.error);
                         $('#errorAlert').show();
@@ -119,6 +121,7 @@
                         $('#analyzeBtn').show();
                     }
                     else {
+                        $('#connectionAlert').hide();
                         $('#errorAlert').hide();
                         $('#unexpErrorAlert').hide();
                         $('#successAlert').show();

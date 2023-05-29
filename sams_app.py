@@ -15,6 +15,7 @@ from datetime import datetime
 from datetime import timedelta
 import instaloader
 import nltk
+import sqlite3
 import io
 import base64
 import pandas
@@ -22,6 +23,8 @@ import numpy
 import string
 import re
 import sams
+
+sqlite3.register_adapter(numpy.int64, lambda val: int(val))
 
 app = Flask(__name__)
 app.secret_key = "446ebb4ee6d962bbd5e7416bf4e7649f"
@@ -164,15 +167,10 @@ def check_page_name():
         bot = instaloader.Instaloader(max_connection_attempts=1)
 
         if not bot.context.is_logged_in:
-            username = "hazimridza"
-            password = "instassdhod_600"
-
-            try:
-                bot.login(username, password)
-                print('Bot login successful.')
-            except Exception as e:
-                print(e)
-                return jsonify({'error': 'Oops! There was a problem connecting to Instagram.'})
+            bot.load_session_from_file('hazimridza')
+        
+        if bot.test_login() is None:
+            return jsonify({'error': 'There was a problem connecting to Instagram.'}) 
             
         page_name = request.form.get('page_name')
         try:
@@ -193,15 +191,10 @@ def scrape_classify():
         bot = instaloader.Instaloader(max_connection_attempts=1)
 
         if not bot.context.is_logged_in:
-            username = "hazimridza"
-            password = "instassdhod_600"
-
-            try:
-                bot.login(username, password)
-                print('Bot login successful.')
-            except Exception as e:
-                print(e)
-                return jsonify({'error': 'Oops! There was a problem connecting to Instagram.'})
+            bot.load_session_from_file('hazimridza')
+        
+        if bot.test_login() is None:
+            return jsonify({'error': 'There was a problem connecting to Instagram.'})
             
         page_name = session['page_name']
         try:
@@ -243,7 +236,7 @@ def scrape_classify():
                     break
         except Exception as e:
             print(e)
-            return jsonify({'error': 'Somehow this stupid exception was actually caught.'})
+            return jsonify({'error': 'An HTTP 429 error was encountered. Please wait a few hours before continuing again.'})
 
     return jsonify({'success': True})
 
@@ -262,14 +255,17 @@ def classify_store():
         sentiment_df.columns = ['comment', 'sentiment']
 
         if 'positive' in sentiment_df['sentiment'].values:
-            positive_count = sentiment_df['sentiment'].value_counts()['positive']
+            positive_count = sentiment_df.sentiment[sentiment_df['sentiment'] == 'positive'].count()
         else:
             positive_count = 0
         
         if 'negative' in sentiment_df['sentiment'].values:
-            negative_count = sentiment_df['sentiment'].value_counts()['negative']
+            negative_count = sentiment_df.sentiment[sentiment_df['sentiment'] == 'negative'].count()
         else:
             negative_count = 0
+
+        print(positive_count)
+        print(negative_count)
 
         comments_df = sentiment_df['comment']
         positive_comments = numpy.array(comments_df[sentiment_df['sentiment'] == 'positive'])
