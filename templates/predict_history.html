@@ -3,33 +3,29 @@
 {% block content %}
 
 <div class="container-xxl flex-grow-1 container-p-y">
-    <h4 class="fw-bold py-3 mb-4 fs-3"><span class="bx bx-table">&nbsp;</span>View Analysis History</h4>
+    <h4 class="fw-bold py-3 mb-4 fs-3"><span class="bx bx-table">&nbsp;</span>View Prediction History</h4>
     <div class="card">
-        <h5 class="card-header">Page Sentiments History</h5>
+        <h5 class="card-header">Post Sentiments History</h5>
         <div class="table-responsive">
-            {% if page_sentiment_visualisations|length > 0 %}
+            {% if post_sentiments|length > 0 %}
             <table class="table">
                 <thead>
                 <tr>
-                    <th>Page Name</th>
-                    <th class="text-nowrap">Date Created</th>
-                    <th>Overall Sentiment</th>
-                    <th>Top Positive Words</th>
-                    <th>Top Negative Words</th>
+                    <th>Date Created</th>
+                    <th>Post Text</th>
+                    <th>Sentiment</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody class="table-border-bottom-0">
                 
                 {% set count = 1 %}
-                {% for page_sentiment_visualisation in page_sentiment_visualisations %}
+                {% for post_sentiment in post_sentiments %}
                 
                 <tr>
-                    <td>{{ page_sentiment_visualisation.page_name }}</td>
-                    <td class="text-nowrap">{{ page_sentiment_visualisation.date_created.strftime('%d-%m-%Y') }}</td>
-                    <td><img src='data:image/png;base64,{{ page_sentiment_visualisation.sentiment_graph }}'/></td>
-                    <td><img src='data:image/png;base64,{{ page_sentiment_visualisation.positive_words_graph }}'/></td>
-                    <td><img src='data:image/png;base64,{{ page_sentiment_visualisation.negative_words_graph }}'/></td>
+                    <td>{{ post_sentiment.date_created.strftime('%d-%m-%Y') }}</td>
+                    <td>{{ post_sentiment.post_text }}</td>
+                    <td>{{ post_sentiment.sentiment }}</td>
                     <td>
                         <div class="dropdown">
                             <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">

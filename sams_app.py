@@ -45,6 +45,12 @@ class PageSentiment(db.Model):
     negative_word_freqs = db.Column(db.String(length=128), nullable=False)
     date_created = db.Column(db.DateTime(), nullable=False, default=datetime.now())
 
+class PostSentiment(db.Model):
+    id = db.Column(db.Integer(), primary_key=True)
+    post_text = db.Column(db.String(length=512), nullable=False)
+    sentiment = db.Column(db.String(length=16), nullable=False)
+    date_created = db.Column(db.DateTime(), nullable=False, default=datetime.now())
+
 class PageSentimentVisualisation:
     def __init__(self, id, page_name, sentiment_graph, positive_words_graph, negative_words_graph, date_created):
         self.id=id
@@ -160,6 +166,11 @@ def history():
 @app.route('/app/predict')
 def predict():
     return render_template('predict.html')
+
+@app.route('/app/prediction_history')
+def predict_history():
+    post_sentiments = PostSentiment.query.order_by(desc(PostSentiment.date_created)).all()
+    return render_template('predict_history.html', post_sentiments=post_sentiments)
 
 @app.route('/app/check_page_name', methods=['POST'])
 def check_page_name():
@@ -349,7 +360,15 @@ def classify_store():
 def sams_predict():
     if request.method == 'POST':
         text = request.form.get('post_text')
-        sentiment = sams.predict(text, 'models/MLPClassifier.pickle')
+        sentiment = sams.predict(text)
+
+        new_predicted_post = PostSentiment(
+            post_text=text,
+            sentiment=sentiment,
+        )
+
+        db.session.add(new_predicted_post)
+        db.session.commit()
 
         return jsonify({'sentiment': sentiment})
 

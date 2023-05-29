@@ -79,7 +79,7 @@
             <li class="menu-item">
               <a href="{{ url_for('history') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-table"></i>
-                <div>View History</div>
+                <div>View Analysis History</div>
               </a>
             </li>
 
@@ -87,6 +87,13 @@
               <a href="{{ url_for('predict') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-cube-alt"></i>
                 <div>Predict Post Sentiment</div>
+              </a>
+            </li>
+
+            <li class="menu-item">
+              <a href="{{ url_for('predict_history') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-table"></i>
+                <div>View Prediction History</div>
               </a>
             </li>
           </ul>
