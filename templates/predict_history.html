@@ -23,7 +23,7 @@
                 {% for post_sentiment in post_sentiments %}
                 
                 <tr>
-                    <td>{{ post_sentiment.date_created.strftime('%d-%m-%Y') }}</td>
+                    <td>{{ post_sentiment.date_created.strftime('%d-%m-%Y %H:%M %Z') }}</td>
                     <td>{{ post_sentiment.post_text }}</td>
                     <td>{{ post_sentiment.sentiment }}</td>
                     <td>
@@ -55,7 +55,7 @@
                             <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
                                 Cancel
                             </button>
-                            <a href="">
+                            <a href="#">
                                 <button type="button" class="btn btn-danger">Delete</button>
                             </a>
                         </div>

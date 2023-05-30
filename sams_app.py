@@ -270,6 +270,15 @@ def classify_store():
                 comment_texts.append(comment)
                 sentiments.append(sentiment)
 
+                new_predicted_post = PostSentiment(
+                    post_text=comment,
+                    sentiment=sentiment,
+                    date_created=datetime.now()
+                )
+
+                db.session.add(new_predicted_post)
+                db.session.commit()
+        
         sentiment_df = pandas.DataFrame([comment_texts, sentiments]).T
         sentiment_df.columns = ['comment', 'sentiment']
 
@@ -370,6 +379,7 @@ def sams_predict():
         new_predicted_post = PostSentiment(
             post_text=text,
             sentiment=sentiment,
+            date_created=datetime.now()
         )
 
         db.session.add(new_predicted_post)
